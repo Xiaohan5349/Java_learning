@@ -1,9 +1,28 @@
 package com.company;
 
+
+
+
+import org.apache.hc.client5.http.classic.methods.HttpGet;
+import org.apache.hc.client5.http.classic.methods.HttpPost;
+import org.apache.hc.client5.http.entity.UrlEncodedFormEntity;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
+import org.apache.hc.client5.http.impl.classic.CloseableHttpResponse;
+import org.apache.hc.client5.http.impl.classic.HttpClients;
+import org.apache.hc.core5.http.HttpEntity;
+import org.apache.hc.core5.http.NameValuePair;
+import org.apache.hc.core5.http.io.entity.EntityUtils;
+import org.apache.hc.core5.http.message.BasicNameValuePair;
+
 import javax.swing.text.Style;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.*;
+
+
+
+
 import java.util.Optional;
 import java.util.Random;
 import java.util.Scanner;
@@ -12,8 +31,22 @@ public class Main {
 
     public static void main(String[] args) {
 	// variable test
-          Main test = new Main();
-          test.switchTest2();
+//          Main test = new Main();
+//          test.wanshu();
+
+
+//          ArrayLearning array = new ArrayLearning();
+//          int[] arr = new int[]{2,-24,-55,-1,0};
+//        int[] arr1 = new int[]{4,3,4,5,2,34,2,12,42,43,342,2,-24,-55,-1,0};
+//          array.quickSort2(arr, 0, arr.length -1);
+//          for(int a : arr){
+//              System.out.print(a+"   ");
+//          }
+
+
+//        FamilyAccount class
+//       FamilyAccount abc = new FamilyAccount();
+//        abc.inital();
           //test.firstTest();
 //          short a = 10;
 //          a+=2;
@@ -27,7 +60,40 @@ public class Main {
 //        if((x=false) || (++z==45)) z++;
 //        System.out.println(z);
 
+        try (CloseableHttpClient httpclient = HttpClients.createDefault()) {
+            HttpGet httpGet = new HttpGet("http://httpbin.org/get");
+
+            try (CloseableHttpResponse response1 = httpclient.execute(httpGet)){
+
+                System.out.println("response code: "+ response1.getCode());
+                System.out.println("response reason: "+ response1.getReasonPhrase());
+                HttpEntity entity1 = response1.getEntity();
+                EntityUtils.consume(entity1);
+            }
+
+
+            HttpPost httpPost = new HttpPost("http://httpbin.org/post");
+            List<NameValuePair> nvps = new ArrayList<>();
+            nvps.add(new BasicNameValuePair("username", "vip"));
+            nvps.add(new BasicNameValuePair("password", "secret"));
+            httpPost.setEntity(new UrlEncodedFormEntity(nvps));
+
+
+            try (CloseableHttpResponse response2 = httpclient.execute(httpPost)){
+                System.out.println("response code: "+ response2.getCode());
+                System.out.println("response reason: "+ response2.getReasonPhrase());
+                HttpEntity entity2 = response2.getEntity();
+                EntityUtils.consume(entity2);
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+
     }
+
+
     void VariableTest(){
         byte b1 = 12;
         byte b2 = -128;
@@ -288,6 +354,70 @@ public class Main {
                 break;
         }
         System.out.println("today is the "+date+" day of this year");
+    }
+
+    public void loopTest(){
+        System.out.print("奇数: ");
+        int sum = 0;
+        int iterator = 0;
+        for (int i = 1; i <= 100; i++){
+            if (i%2 == 1)
+                sum +=i;
+        }
+        System.out.println(sum);
+        System.out.print("7的倍数: ");
+        sum = 0;
+        for (int i = 1; i <= 100; i++){
+            if (i%7 == 0) {
+                sum += i;
+                iterator++;
+            }
+        }
+        System.out.println(sum);
+        System.out.println("共有"+iterator+"个");
+        System.out.print("水仙数: ");
+        for (int i = 100; i < 1000; i++){
+            int h = i/100;
+            int t = i/10 - h*10;
+            int g = i%10;
+            if (i == h*h*h + t*t*t + g*g*g)
+                System.out.print(i+" ");
+        }
+    }
+
+    public void zhishu(){
+        boolean zhishu = true;
+        System.out.println("所有质数: 2 3 ");
+        int sum = 0;
+        long start = System.currentTimeMillis();
+        l: for( int i = 2; i <= 100000; i++){
+            for (int j = 2; j <= Math.sqrt(i); j++){
+                if(i%j == 0) {
+                    zhishu = false;
+                    //second way to achieve;
+                    //continue label;
+                    break;
+                }
+            }
+            if(zhishu) {
+                sum++;
+               //System.out.println(i+" ");
+            }
+            zhishu = true;
+        }
+        long end = System.currentTimeMillis();
+        System.out.println(end-start+"ms");
+        System.out.println(sum);
+    }
+    public void wanshu(){
+        int factor = 1;
+        for(int i = 2; i <= 1000; i++ ){
+            for(int j = 2; j < Math.sqrt(i); j++){
+                if(i%j == 0) factor=factor+j+i/j;
+            }
+            if(i==factor) System.out.println(i);
+            factor = 1;
+        }
     }
 }
 
